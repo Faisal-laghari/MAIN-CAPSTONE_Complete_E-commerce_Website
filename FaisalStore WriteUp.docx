@@ -1,0 +1,13 @@
+Faisal Store — Project Write-up
+By Faisal
+Project Overview
+Faisal Store is a complete multi-page e-commerce website built as the final capstone project of my 4-week frontend development internship. The website lets users browse products, add them to a cart, and go through a full checkout process. Everything is built using only HTML, CSS, and JavaScript.
+Features
+The website has five fully working pages. The Home page has a hero section, category cards, and featured products. The Shop page has all 20 products with a live search bar, category filter buttons, and a sort by price option. The Product Detail page shows a single product with its image, description, price, and an add to cart button. The Cart page shows all selected items with quantity controls, remove buttons, and a live total price. The Checkout page has a complete form with validation for name, email, phone, address, and card details.
+Tech Stack
+I used HTML5 for structure, CSS3 for styling and animations, Bootstrap 5 for responsive layout, and JavaScript for all functionality. Cart data is stored using localStorage so it stays saved when the user refreshes or changes pages. Google Fonts was used for typography and Unsplash for product images. The site is deployed live using GitHub Pages.
+Challenges and Solutions
+The biggest challenge was making the cart work across all pages. I solved this by storing cart data in localStorage and reading it on every page load through a shared JavaScript file. Another challenge was making search and category filter work together at the same time. I wrote one function that checks both inputs before showing results. Responsive layout on small screens was also tricky and was fixed using CSS Grid with media queries.
+Live Links
+GitHub Repository: (https://github.com/Faisal-laghari/MAIN-CAPSTONE_Complete_E-commerce_Website)
+Live Website: (https://faisal-laghari.github.io/MAIN-CAPSTONE_Complete_E-commerce_Website/5vf

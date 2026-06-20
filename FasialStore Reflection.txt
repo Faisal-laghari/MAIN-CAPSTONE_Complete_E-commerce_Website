@@ -1,0 +1,10 @@
+My Web Development Journey
+By Faisal
+When I started this internship four weeks ago, I only knew how to write basic HTML and CSS. I could make a simple webpage look decent, but building something real and functional felt very far away. Week by week, that distance disappeared.
+In Week 1, I built my first responsive landing page. That project taught me how much thought goes into making a layout work properly on every screen size. I learned about media queries, flexbox, and how small design decisions affect the entire user experience.
+Week 2 pushed me deep into JavaScript. I worked on interactive components, DOM manipulation, event listeners, and form validation with backend style logic. That week made me realize that a website is not just about how it looks. It is about how it thinks and responds.
+Week 3 was when everything started clicking together. Building a mini e commerce product page forced me to think like a real developer. I had to organize my files, manage product data, and make sure the interface made sense for the person using it.
+Week 4 was the final test and my biggest achievement. Faisal Store is a complete five page e commerce website. It has a working cart that saves data using localStorage, a live search bar, category filtering, price sorting, a product detail page, and a checkout form with full validation. Every single feature was built by me using only HTML, CSS, and JavaScript.
+Looking back, the biggest lesson I learned is that web development is not memorizing code. It is about solving problems. Every error I fixed, every bug I debugged, and every feature I built made me a better developer.
+The two technologies I want to learn next are React and Node.js. React will help me build faster and more organized user interfaces. Node.js will allow me to handle servers and databases so I can build complete full stack applications on my own.
+This internship gave me real skills, real projects, and real confidence. Faisal Store is something I am proud to put in my portfolio and show to the world.
