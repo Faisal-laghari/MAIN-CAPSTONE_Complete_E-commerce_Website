@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Shopping Cart | Faisal Store</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="siteHeader">
+    <nav class="mainNav">
+      <a href="index.html" class="brandLogo">Faisal Store</a>
+
+      <button class="menuToggle" id="menuToggle" aria-label="Open navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="navWrapper" id="navWrapper">
+        <ul class="navList">
+          <li><a href="index.html" class="navLink">Home</a></li>
+          <li><a href="shop.html" class="navLink">Shop</a></li>
+          <li><a href="cart.html" class="navLink activeLink">Cart</a></li>
+          <li><a href="checkout.html" class="navLink">Checkout</a></li>
+        </ul>
+
+        <a href="cart.html" class="cartButton">
+          Cart
+          <span class="cartCount" id="cartCount">0</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pageContainer">
+
+    <section class="pageHero">
+      <p class="sectionLabel">Your Selection</p>
+
+      <h1>Shopping Cart</h1>
+
+      <p class="pageText">
+        Review your items, update quantities, and proceed to checkout when you are ready.
+      </p>
+    </section>
+
+    <section class="cartLayout">
+
+      <div class="cartItemsSection">
+
+        <div id="cartContainer"></div>
+
+        <div class="emptyState hiddenState" id="emptyCartState">
+          <h2>Your cart is empty</h2>
+
+          <p>
+            Browse our premium collection and add products to your cart.
+          </p>
+
+          <a href="shop.html" class="primaryButton">
+            Continue Shopping
+          </a>
+        </div>
+
+      </div>
+
+      <aside class="cartSummary">
+
+        <h2>Order Summary</h2>
+
+        <div class="summaryRow">
+          <span>Total Items</span>
+          <span id="summaryItems">0</span>
+        </div>
+
+        <div class="summaryRow">
+          <span>Subtotal</span>
+          <span id="summarySubtotal">$0.00</span>
+        </div>
+
+        <div class="summaryRow">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+
+        <div class="summaryDivider"></div>
+
+        <div class="summaryRow summaryTotal">
+          <span>Total</span>
+          <span id="summaryTotal">$0.00</span>
+        </div>
+
+        <a href="checkout.html" class="primaryButton checkoutButton">
+          Proceed To Checkout
+        </a>
+
+      </aside>
+
+    </section>
+
+  </main>
+
+  <footer class="siteFooter">
+    <p>© 2026 Faisal | All Rights are Reserved</p>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    const cartContainer = document.getElementById("cartContainer");
+    const emptyCartState = document.getElementById("emptyCartState");
+
+    const summaryItems = document.getElementById("summaryItems");
+    const summarySubtotal = document.getElementById("summarySubtotal");
+    const summaryTotal = document.getElementById("summaryTotal");
+
+    function renderCart() {
+      const cart = getCart();
+
+      if (!cart.length) {
+        cartContainer.innerHTML = "";
+
+        emptyCartState.classList.remove("hiddenState");
+
+        summaryItems.textContent = "0";
+        summarySubtotal.textContent = "$0.00";
+        summaryTotal.textContent = "$0.00";
+
+        return;
+      }
+
+      emptyCartState.classList.add("hiddenState");
+
+      let totalItems = 0;
+      let orderTotal = 0;
+
+      cartContainer.innerHTML = cart.map(item => {
+        const product = products.find(productItem => productItem.id === item.id);
+
+        if (!product) {
+          return "";
+        }
+
+        const itemSubtotal = product.price * item.quantity;
+
+        totalItems += item.quantity;
+        orderTotal += itemSubtotal;
+
+        return `
+          <article class="cartCard">
+
+            <a href="productDetail.html?id=${product.id}" class="cartImageWrapper">
+              <img
+                src="${product.image}"
+                alt="${product.name}"
+                class="cartImage"
+              >
+            </a>
+
+            <div class="cartContent">
+
+              <span class="categoryBadge">
+                ${product.category}
+              </span>
+
+              <h2 class="cartTitle">
+                <a href="productDetail.html?id=${product.id}">
+                  ${product.name}
+                </a>
+              </h2>
+
+              <p class="cartPrice">
+                $${product.price.toFixed(2)}
+              </p>
+
+              <div class="cartActions">
+
+                <div class="quantityWrapper">
+
+                  <button
+                    class="quantityButton"
+                    onclick="changeQuantity(${product.id}, -1)"
+                    type="button"
+                  >
+                    −
+                  </button>
+
+                  <input
+                    type="number"
+                    class="quantityInput"
+                    value="${item.quantity}"
+                    min="1"
+                    onchange="manualQuantity(${product.id}, this.value)"
+                  >
+
+                  <button
+                    class="quantityButton"
+                    onclick="changeQuantity(${product.id}, 1)"
+                    type="button"
+                  >
+                    +
+                  </button>
+
+                </div>
+
+                <button
+                  class="removeButton"
+                  onclick="deleteItem(${product.id})"
+                  type="button"
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            </div>
+
+            <div class="cartSubtotal">
+              $${itemSubtotal.toFixed(2)}
+            </div>
+
+          </article>
+        `;
+      }).join("");
+
+      summaryItems.textContent = totalItems;
+      summarySubtotal.textContent = `$${orderTotal.toFixed(2)}`;
+      summaryTotal.textContent = `$${orderTotal.toFixed(2)}`;
+    }
+
+    function changeQuantity(id, amount) {
+      const cart = getCart();
+
+      const cartItem = cart.find(item => item.id === id);
+
+      if (!cartItem) {
+        return;
+      }
+
+      const updatedQuantity = cartItem.quantity + amount;
+
+      updateQuantity(id, updatedQuantity);
+
+      renderCart();
+    }
+
+    function manualQuantity(id, value) {
+      const quantity = Number(value);
+
+      if (Number.isNaN(quantity) || quantity < 1) {
+        updateQuantity(id, 1);
+      } else {
+        updateQuantity(id, quantity);
+      }
+
+      renderCart();
+    }
+
+    function deleteItem(id) {
+      removeFromCart(id);
+
+      renderCart();
+    }
+
+    const menuToggle = document.getElementById("menuToggle");
+    const navWrapper = document.getElementById("navWrapper");
+
+    menuToggle.addEventListener("click", () => {
+      navWrapper.classList.toggle("menuOpen");
+    });
+
+    renderCart();
+  </script>
+
+</body>
+</html>

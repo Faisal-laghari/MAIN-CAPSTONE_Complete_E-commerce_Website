@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Product Details | Faisal Store</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="siteHeader">
+    <nav class="mainNav">
+      <a href="index.html" class="brandLogo">Faisal Store</a>
+
+      <button class="menuToggle" id="menuToggle" aria-label="Open navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="navWrapper" id="navWrapper">
+        <ul class="navList">
+          <li><a href="index.html" class="navLink">Home</a></li>
+          <li><a href="shop.html" class="navLink activeLink">Shop</a></li>
+          <li><a href="cart.html" class="navLink">Cart</a></li>
+          <li><a href="checkout.html" class="navLink">Checkout</a></li>
+        </ul>
+
+        <a href="cart.html" class="cartButton">
+          Cart
+          <span class="cartCount" id="cartCount">0</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pageContainer">
+
+    <section class="breadcrumbSection">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="shop.html">Shop</a>
+      <span>/</span>
+      <span id="breadcrumbProduct">Product</span>
+    </section>
+
+    <section class="productDetailSection" id="productDetailSection"></section>
+
+    <section class="relatedSection">
+
+      <div class="sectionHeader">
+        <p class="sectionLabel">Recommended Products</p>
+        <h2>Related Products</h2>
+      </div>
+
+      <div class="productGrid" id="relatedGrid"></div>
+
+    </section>
+
+  </main>
+
+  <footer class="siteFooter">
+    <p>© 2026 Faisal | All Rights are Reserved</p>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    const detailSection = document.getElementById("productDetailSection");
+    const relatedGrid = document.getElementById("relatedGrid");
+    const breadcrumbProduct = document.getElementById("breadcrumbProduct");
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const productId = Number(queryParams.get("id"));
+
+    const selectedProduct = products.find(product => product.id === productId);
+
+    if (!selectedProduct) {
+      detailSection.innerHTML = `
+        <div class="emptyState">
+          <h2>Product Not Found</h2>
+          <p>The product you are looking for does not exist.</p>
+          <a href="shop.html" class="primaryButton">
+            Return To Shop
+          </a>
+        </div>
+      `;
+    } else {
+      document.title = `${selectedProduct.name} | Faisal Store`;
+
+      breadcrumbProduct.textContent = selectedProduct.name;
+
+      detailSection.innerHTML = `
+        <div class="productDetailGrid">
+
+          <div class="detailImageCard">
+            <div class="detailImageWrapper">
+              <img
+                src="${selectedProduct.image}"
+                alt="${selectedProduct.name}"
+                class="detailImage"
+              >
+            </div>
+          </div>
+
+          <div class="detailContent">
+
+            <span class="categoryBadge">
+              ${selectedProduct.category}
+            </span>
+
+            <h1 class="detailTitle">
+              ${selectedProduct.name}
+            </h1>
+
+            <p class="detailPrice">
+              $${selectedProduct.price.toFixed(2)}
+            </p>
+
+            <p class="detailDescription">
+              ${selectedProduct.description}
+            </p>
+
+            <div class="quantitySection">
+
+              <label for="quantityInput" class="quantityLabel">
+                Quantity
+              </label>
+
+              <div class="quantityWrapper">
+
+                <button
+                  class="quantityButton"
+                  id="decreaseQuantity"
+                  type="button"
+                >
+                  −
+                </button>
+
+                <input
+                  type="number"
+                  id="quantityInput"
+                  class="quantityInput"
+                  min="1"
+                  value="1"
+                >
+
+                <button
+                  class="quantityButton"
+                  id="increaseQuantity"
+                  type="button"
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+            <button
+              class="primaryButton detailButton"
+              id="addDetailCart"
+            >
+              Add To Cart
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      const quantityInput = document.getElementById("quantityInput");
+      const decreaseQuantity = document.getElementById("decreaseQuantity");
+      const increaseQuantity = document.getElementById("increaseQuantity");
+      const addDetailCart = document.getElementById("addDetailCart");
+
+      decreaseQuantity.addEventListener("click", () => {
+        const currentValue = Number(quantityInput.value);
+
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+      });
+
+      increaseQuantity.addEventListener("click", () => {
+        quantityInput.value = Number(quantityInput.value) + 1;
+      });
+
+      quantityInput.addEventListener("input", () => {
+        if (quantityInput.value < 1 || quantityInput.value === "") {
+          quantityInput.value = 1;
+        }
+      });
+
+      addDetailCart.addEventListener("click", () => {
+        const quantity = Number(quantityInput.value);
+
+        for (let index = 0; index < quantity; index += 1) {
+          addToCart(selectedProduct.id);
+        }
+      });
+
+      const relatedProducts = products
+        .filter(product =>
+          product.category === selectedProduct.category &&
+          product.id !== selectedProduct.id
+        )
+        .slice(0, 4);
+
+      relatedGrid.innerHTML = relatedProducts.map(product => `
+        <article class="productCard">
+
+          <a href="productDetail.html?id=${product.id}" class="productImageLink">
+            <div class="productImageWrapper">
+              <img
+                src="${product.image}"
+                alt="${product.name}"
+                class="productImage"
+                loading="lazy"
+              >
+            </div>
+          </a>
+
+          <div class="productContent">
+
+            <span class="categoryBadge">
+              ${product.category}
+            </span>
+
+            <h3 class="productTitle">
+              <a href="productDetail.html?id=${product.id}">
+                ${product.name}
+              </a>
+            </h3>
+
+            <p class="productDescription">
+              ${product.description}
+            </p>
+
+            <div class="productFooter">
+
+              <span class="productPrice">
+                $${product.price.toFixed(2)}
+              </span>
+
+              <button
+                class="primaryButton addCartButton"
+                onclick="addToCart(${product.id})"
+              >
+                Add To Cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+      `).join("");
+    }
+
+    const menuToggle = document.getElementById("menuToggle");
+    const navWrapper = document.getElementById("navWrapper");
+
+    menuToggle.addEventListener("click", () => {
+      navWrapper.classList.toggle("menuOpen");
+    });
+  </script>
+
+</body>
+</html>
